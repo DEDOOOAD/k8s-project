@@ -23,7 +23,7 @@ spec:
     spec: 
       containers:
       - name: was
-        image: songyibkb/was:2.0
+        image: 057637912366.dkr.ecr.ap-northeast-2.amazonaws.com/project:was-2.0
         ports:
         - containerPort: 8080
 

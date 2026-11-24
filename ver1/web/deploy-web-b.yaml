@@ -23,7 +23,7 @@ spec:
     spec: 
       containers:
       - name: web-b
-        image: songyibkb/web:1.0
+        image: 057637912366.dkr.ecr.ap-northeast-2.amazonaws.com/project:web-1.0
         ports:
         - containerPort: 80
                       
