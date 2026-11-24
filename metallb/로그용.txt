@@ -1,0 +1,5 @@
+kubectl apply -f metallb-config.yaml
+kubectl get ipaddresspools,l2advertisements -n metallb-system
+kubectl get service lb-check
+kubectl describe service lb-check | grep -A8 Events:
+curl -sI http://192.168.56.50

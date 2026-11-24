@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  namespace: project
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      tier: db
+
+  strategy:
+    type: Recreate
+
+  template:
+    metadata:
+      labels:
+        tier: db
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: mysql
+          image: mysql:8.4
+          ports:
+            - containerPort: 3306
+
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vet-db
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_DATABASE
+              value: "vet"
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: vet-db
+                  key: MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vet-db
+                  key: MYSQL_PASSWORD
+
+          volumeMounts:
+          - name: data-volume
+            mountPath: /var/lib/mysql
+          - name: mysql-init-sql-files
+            mountPath: /docker-entrypoint-initdb.d
+            readOnly: true
+
+
+          readinessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 5
+            timeoutSeconds: 3
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3 
+
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: db
+        - name: mysql-init-sql-files
+          configMap:
+            name: db-init-sql
+            items:
+              - key: 01-schema.sql
+                path: 01-schema.sql
+              - key: 02-seed.sql
+                path: 02-seed.sql

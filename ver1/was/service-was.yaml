@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: was
+  namespace: project
+spec:
+  type: ClusterIP
+  selector:
+    tier: was
+  ports:
+  - port: 8080
+    targetPort: 8080
