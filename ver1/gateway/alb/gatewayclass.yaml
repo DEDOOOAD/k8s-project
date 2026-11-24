@@ -3,4 +3,4 @@ kind: GatewayClass
 metadata:
   name: alb
 spec:
-  controllerName: eks.amazonaws.com/project-alb
+  controllerName: eks.amazonaws.com/gateway-alb
